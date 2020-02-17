@@ -22,7 +22,7 @@ open class CurrentWeatherEntity {
             .append(main).append(',').append(clouds).append(',').append(id)
             .append(',').append(sys)
             .append(',').append(base).append(',').append(wind).append("]").toString()
-        //        return "Weather [dt = " + dt + ", coord = " + coord + ", visibility = " + visibility + ", weather = " + weather + ", name = " + name + ", cod = " + cod + ", main = " + main + ", clouds = " + clouds + ", id = " + id + ", sys = " + sys + ", base = " + base + ", wind = " + wind + "]";
+        //        return "Weathers [dt = " + dt + ", coord = " + coord + ", visibility = " + visibility + ", weather = " + weather + ", name = " + name + ", cod = " + cod + ", main = " + main + ", clouds = " + clouds + ", id = " + id + ", sys = " + sys + ", base = " + base + ", wind = " + wind + "]";
     }
 
     fun getDouble(temp: String?) {}

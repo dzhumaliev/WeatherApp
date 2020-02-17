@@ -2,7 +2,7 @@ package com.example.weatherapp.data.network
 
 import com.example.weatherapp.BuildConfig.BASE_URL_WEATHER
 import com.example.weatherapp.data.entity.currentWeather.CurrentWeatherEntity
-import com.example.weatherapp.data.entity.forecastWeather.ForecastMainWeather
+import com.example.weatherapp.data.entity.forecastWeather.ForecastWeather
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -12,7 +12,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
+
 class RetrofitBuilder {
+
 
     fun create(): RetrofitService {
         val okHttpClient = OkHttpClient().newBuilder()
@@ -22,33 +24,32 @@ class RetrofitBuilder {
             .build()
 
         val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL_WEATHER)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BASE_URL_WEATHER)
             .client(okHttpClient)
             .build()
 
         return retrofit.create(RetrofitService::class.java)
     }
 
-    interface RetrofitService {
-
-        @GET("weather")
-        fun getCurrentWeather(
-            @Query("q") city: String?,
-            @Query("appid") appId: String?,
-            @Query("units") metric: String?
-        ): Call<CurrentWeatherEntity?>?
+}
 
 
-        @GET("forecast/daily")
-        fun getForecastWeather(
-            @Query("id") id: Int?,
-            @Query("appid") appId: String?
-        ): Call<List<ForecastMainWeather>>
+interface RetrofitService {
 
-    }
+    @GET("weather")
+    fun getCurrentWeather(
+        @Query("q") city: String?,
+        @Query("appid") appId: String?,
+        @Query("units") metric: String?
+    ): Call<CurrentWeatherEntity?>?
 
 
-
+    @GET("forecast")
+    fun getForecastWeather(
+        @Query("q") city: String,
+        @Query("appid") appId: String,
+        @Query("units") metric: String?
+    ): Call<ForecastWeather>
 }

@@ -6,4 +6,8 @@
     <color name="day">#bdd8f5</color>
     <color name="night">#FFFFFF</color>
     <color name="black">#000000</color>
+
+    <color name="sunnyy">#ffc9a9</color>
+    <color name="snow">#a2d9e0</color>
+    <color name="rain">#a2d9e0</color>
 </resources>

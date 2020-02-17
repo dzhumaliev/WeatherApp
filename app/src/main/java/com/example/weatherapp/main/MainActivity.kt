@@ -16,6 +16,7 @@ import com.example.weatherapp.BuildConfig.WEATHER_KEY
 import com.example.weatherapp.R
 import com.example.weatherapp.data.entity.currentWeather.CurrentWeatherEntity
 import com.example.weatherapp.data.network.RetrofitBuilder
+import com.example.weatherapp.forecastMain.ForecastActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,7 +32,6 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var animFadeIn: Animation
     lateinit var animBtn: Animation
 
-
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,9 +44,9 @@ open class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     fun backgroundChanger() {
         if (getHour() in 7..19) {
-            main.setBackgroundResource(R.drawable.day2)
-            window.navigationBarColor = getColor(R.color.day)
-            window.statusBarColor = getColor(R.color.day)
+            main.setBackgroundResource(R.drawable.backgroount_night)
+//            window.navigationBarColor = getColor(R.color.day)
+//            window.statusBarColor = getColor(R.color.day)
         } else {
             textDesc.setTextColor(Color.parseColor("#000000"))
             textCelsius.setTextColor(Color.parseColor("#000000"))
@@ -55,87 +55,91 @@ open class MainActivity : AppCompatActivity() {
     }
 
     private fun retrofitCurrentMaker() {
-        RetrofitBuilder().create().getCurrentWeather("Bishkek", WEATHER_KEY, "metric")
+        RetrofitBuilder().create()
+            .getCurrentWeather(getString(R.string.city_name), WEATHER_KEY, "metric")
             ?.enqueue(object : Callback<CurrentWeatherEntity?> {
                 override fun onResponse(
                     call: Call<CurrentWeatherEntity?>,
                     response: Response<CurrentWeatherEntity?>
                 ) {
-                    Log.e("ololo", "r")
-
+                    Log.d("ololo", "url main " + call.request().url)
                     val data: CurrentWeatherEntity? = response.body()
                     data?.weather
-                    try {
-                        getData(data)
-                    } catch (i: Exception) {
-                        Log.e("ololo", i.message)
-                    }
+                    getData(data)
                 }
-
-
-                override fun onFailure(
-                    call: Call<CurrentWeatherEntity?>,
-                    t: Throwable      ///no internet toast
-
-                ) {
-
-                    Log.e("ololo", t.message)
+                override fun onFailure(call: Call<CurrentWeatherEntity?>, t: Throwable) {
 
                 }
             })
     }
 
     private fun animationChanger(data: CurrentWeatherEntity?) {
-        if (data!!.weather?.get(0)?.id in 200..202) {
-            if (getHour() in 7..19) {
+        val way: Int? = data!!.weather?.get(0)?.id
+        val dateIffer: Boolean = getHour() in 7..19
+        val animFadeInUnit: Unit? = imageView.startAnimation(animFadeIn)
+
+        if (way in 200..202) {
+            if (dateIffer) {
                 imageView.setAnimation(R.raw.stormshowersday)
+                animFadeInUnit
+
             } else {
                 imageView.setAnimation(R.raw.storm)
+                animFadeInUnit
             }
         }
-        if (data.weather?.get(0)?.id in 210..232) {
+        if (way in 210..232) {
             imageView.setAnimation(R.raw.thunder)
+            animFadeInUnit
         }
-        if (data.weather?.get(0)?.id in 300..321) {
+        if (way in 300..321) {
             imageView.setAnimation(R.raw.snow_sunny)
-            imageView.startAnimation(animFadeIn)
+            animFadeInUnit
         }
-        if (data.weather?.get(0)?.id in 500..531) {
-            if (getHour() in 7..19) {
+        if (way in 500..531) {
+            if (dateIffer) {
                 imageView.setAnimation(R.raw.shower)
+                animFadeInUnit
             } else {
                 imageView.setAnimation(R.raw.rainynight)
+                animFadeInUnit
             }
         }
-        if (data.weather?.get(0)?.id in 600..622) {
-            if (getHour() in 7..19) {
+        if (way in 600..622) {
+            if (dateIffer) {
                 imageView.setAnimation(R.raw.snow)
+                animFadeInUnit
+
             } else {
                 imageView.setAnimation(R.raw.snownight)
+                animFadeInUnit
             }
         }
-        if (data.weather?.get(0)?.id in 701..781) {
-            if (getHour() in 7..19) {
+        if (way in 701..781) {
+            if (dateIffer) {
                 imageView.setAnimation(R.raw.foggy)
-                imageView.startAnimation(animFadeIn)
+                animFadeInUnit
             } else {
                 imageView.setAnimation(R.raw.mist)
-                imageView.startAnimation(animFadeIn)
+                animFadeInUnit
             }
         }
-        if (data.weather?.get(0)?.id == 800) {
-            if (getHour() in 7..19) {
+        if (way == 800) {
+            if (dateIffer) {
                 imageView.setAnimation(R.raw.sunny)
+                animFadeInUnit
             } else {
                 imageView.setAnimation(R.raw.night)
+                animFadeInUnit
             }
         }
-        if (data.weather?.get(0)?.id in 801..804) {
-            if (getHour() in 7..19) {
+        if (way in 801..804) {
+            if (dateIffer) {
                 imageView.setAnimation(R.raw.cloudy)
-                imageView.startAnimation(animFadeIn)
+                animFadeInUnit
             } else {
                 imageView.setAnimation(R.raw.cloudynight)
+                animFadeInUnit
             }
         }
     }
@@ -155,7 +159,6 @@ open class MainActivity : AppCompatActivity() {
         textDesc.text = textDesc.text.substring(0, 1).toUpperCase() + textDesc.text.substring(1)
         animationChanger(data)
         getLocalDate()
-        Log.e("ooo", data.weather?.get(0)?.id.toString())
     }
 
     private fun getLocalDate() {
@@ -173,8 +176,6 @@ open class MainActivity : AppCompatActivity() {
         time.startAnimation(animFadeIn)
         time.text = formattedHour
 
-
-
         btn_forecast.setOnClickListener {
             val i = Intent(this, ForecastActivity::class.java)
             val sharedView: View = btn_forecast
@@ -190,7 +191,6 @@ open class MainActivity : AppCompatActivity() {
             startActivity(i, transitionActivityOptions.toBundle())
         }
 
-
         animBtn = AnimationUtils.loadAnimation(this, R.anim.translate)
         first_card_view.visibility = View.VISIBLE
         first_card_view.startAnimation(animBtn)
@@ -198,7 +198,6 @@ open class MainActivity : AppCompatActivity() {
         second_card_view.startAnimation(animBtn)
         third_card_view.visibility = View.VISIBLE
         third_card_view.startAnimation(animBtn)
-
 
     }
 

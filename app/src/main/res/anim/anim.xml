@@ -3,12 +3,12 @@
     <alpha
         android:duration="2000"
         android:fromAlpha="0.0"
-        android:toAlpha="1.0"/>
+        android:toAlpha="1.0" />
 
 </set>
 
 
-<!--<rotate-->
+    <!--<rotate-->
     <!--android:fromDegrees="100"-->
     <!--android:toDegrees="-45"-->
     <!--android:toYScale="4.0"-->

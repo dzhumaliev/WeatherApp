@@ -16,8 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
-        <activity android:name=".main.ForecastActivity"></activity>
-        <activity android:name=".main.MainActivity">
+        <activity android:name=".forecastMain.ForecastActivity" />
+        <activity android:name=".main.MainActivity" />
+        <activity android:name=".splash.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
